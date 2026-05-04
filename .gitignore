@@ -6,6 +6,7 @@
 *.dll
 *.so
 *.dylib
+main
 
 # Test binary
 *.test
@@ -15,4 +16,3 @@
 
 # Dependency directories (not used by this repo but common)
 vendor/
-
