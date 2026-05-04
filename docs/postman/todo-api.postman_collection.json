@@ -1,0 +1,160 @@
+{
+  "info": {
+    "_postman_id": "f2e1b2c1-9c3a-4b1a-8a33-2f3a9d6d2f7d",
+    "name": "todo-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Simple in-memory CRUD To-do REST API (Go stdlib). Base URL variable: {{baseUrl}}"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /healthz",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/healthz",
+              "host": ["{{baseUrl}}"],
+              "path": ["healthz"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Todos",
+      "item": [
+        {
+          "name": "POST /api/v1/todos (Create)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status is 201', function () { pm.response.to.have.status(201); });",
+                  "var body = pm.response.json();",
+                  "pm.test('has data.id', function () { pm.expect(body.data).to.have.property('id'); });",
+                  "if (body && body.data && body.data.id) { pm.collectionVariables.set('todoId', body.data.id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Buy milk\",\n  \"description\": \"2 liters\",\n  \"dueAt\": \"2026-05-10T09:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/todos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "todos"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/todos (List)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/todos?limit=50&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "todos"],
+              "query": [
+                { "key": "limit", "value": "50" },
+                { "key": "offset", "value": "0" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/todos/:id (Get)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/todos/{{todoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "todos", "{{todoId}}"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/v1/todos/:id (Replace)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Buy milk (updated)\",\n  \"description\": \"\",\n  \"completed\": false,\n  \"dueAt\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/todos/{{todoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "todos", "{{todoId}}"]
+            }
+          }
+        },
+        {
+          "name": "PATCH /api/v1/todos/:id (Partial Update)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"completed\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/todos/{{todoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "todos", "{{todoId}}"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/v1/todos/:id (Delete)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/todos/{{todoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "todos", "{{todoId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "todoId",
+      "value": ""
+    }
+  ]
+}
+
